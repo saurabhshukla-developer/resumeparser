@@ -14,5 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return (new \App\Services\ResumeParserAffinda)->getAllData();
+    return (new \App\Services\ResumeParserAffinda())->getAllData();
 });
+
+Route::view('/home', 'home');

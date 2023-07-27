@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\User;
@@ -19,7 +20,8 @@ class ResumeParserAffinda
     private $parsed = false;
     private $parseData = [];
 
-    function __construct(){
+    public function __construct()
+    {
         $this->parseResume();
     }
 
@@ -80,12 +82,12 @@ class ResumeParserAffinda
         $primaryDetails['dob'] = $resumeData->dateOfBirth ?? null; // there is no column for this in database
         $primaryDetails['emails'] = $this->fetchAllEmails() ?? null;
         $primaryDetails['phoneNumbers'] = $this->fetchAllPhoneNumbers() ?? null;
-        if($resumeData->objective == '' && $resumeData->summary != ''){
+        if($resumeData->objective == '' && $resumeData->summary != '') {
             $primaryDetails['objective'] = $resumeData->summary ?? null;
         } else {
             $primaryDetails['objective'] = $resumeData->objective ?? null;
         }
-        
+
         $primaryDetails['total_experience'] = $resumeData->totalYearsExperience ?? null;
         $primaryDetails['languages'] = $this->fetchAllLanguages() ?? null;
         $primaryDetails['linkedin_id'] = isset($resumeData->linkedin) ? $resumeData->linkedin : null ?? null;
@@ -97,7 +99,7 @@ class ResumeParserAffinda
     {
         $resumeData = $this->parseData;
         $phones = [];
-        if(isset($resumeData->phoneNumbers) && !empty($resumeData->phoneNumbers)){
+        if(isset($resumeData->phoneNumbers) && !empty($resumeData->phoneNumbers)) {
             foreach ($resumeData->phoneNumbers as $phoneNumber) {
                 array_push($phones, $phoneNumber);
             }
@@ -108,7 +110,7 @@ class ResumeParserAffinda
     {
         $resumeData = $this->parseData;
         $emails = [];
-        if(isset($resumeData->emails) && !empty($resumeData->emails)){
+        if(isset($resumeData->emails) && !empty($resumeData->emails)) {
             foreach ($resumeData->emails as $resumeEmail) {
                 array_push($emails, $resumeEmail);
             }
@@ -119,7 +121,7 @@ class ResumeParserAffinda
     {
         $resumeData = $this->parseData;
         $languages = [];
-        if(isset($resumeData->languages) && !empty($resumeData->languages)){
+        if(isset($resumeData->languages) && !empty($resumeData->languages)) {
             foreach ($resumeData->languages as $resumelang) {
                 array_push($languages, $resumelang);
             }
@@ -127,13 +129,13 @@ class ResumeParserAffinda
         return $languages ?? null;
     }
 
-    //Fetch Experience Data 
+    //Fetch Experience Data
     public function fetchExperienceFromResumeData()
     {
         $resumeData = $this->parseData;
-        if(isset($resumeData->workExperience) && !empty($resumeData->workExperience)){
+        if(isset($resumeData->workExperience) && !empty($resumeData->workExperience)) {
             $experiences = [];
-            foreach($resumeData->workExperience as $resumeExperience){
+            foreach($resumeData->workExperience as $resumeExperience) {
                 $experience = [];
                 $experience['job_title'] = $resumeExperience->jobTitle ?? null;
                 $experience['organization'] = $resumeExperience->organization ?? null;
@@ -153,29 +155,29 @@ class ResumeParserAffinda
     public function fetchEducationDetailsFromResumeData()
     {
         $resumeData = $this->parseData;
-        if(isset($resumeData->education) && !empty($resumeData->education)){
+        if(isset($resumeData->education) && !empty($resumeData->education)) {
             $educations = [];
-            foreach($resumeData->education as $resumeEducation){
+            foreach($resumeData->education as $resumeEducation) {
                 $education = [];
                 $education['organization'] = $resumeEducation->organization ?? null;
                 // if(isset($resumeEducation->accreditation) && !empty($resumeEducation->accreditation)){
-                    $education['education'] = $resumeEducation->accreditation->education ?? null;
-                    $education['educationLevel'] = $resumeEducation->accreditation->educationLevel ?? null;
+                $education['education'] = $resumeEducation->accreditation->education ?? null;
+                $education['educationLevel'] = $resumeEducation->accreditation->educationLevel ?? null;
                 // }
                 // if(isset($resumeEducation->grade) && !empty($resumeEducation->grade)){
-                    $education['percentage'] = $resumeEducation->grade->raw ?? null;
+                $education['percentage'] = $resumeEducation->grade->raw ?? null;
                 // }
                 // if(isset($resumeEducation->dates) && !empty($resumeEducation->dates)){
-                    $education['start_date'] = $resumeEducation->dates->startDate ?? null;
-                    $education['end_date'] = $resumeEducation->dates->completionDate ?? null;
-                    $education['is_current'] = $resumeEducation->dates->isCurrent ?? null;
+                $education['start_date'] = $resumeEducation->dates->startDate ?? null;
+                $education['end_date'] = $resumeEducation->dates->completionDate ?? null;
+                $education['is_current'] = $resumeEducation->dates->isCurrent ?? null;
                 // }
                 // if(isset($resumeEducation->location) && !empty($resumeEducation->location)){
-                    $education['city'] = $resumeEducation->location->city ?? null;
-                    $education['pincode'] = $resumeEducation->location->postalCode ?? null;
-                    $education['state'] = $resumeEducation->location->state ?? null;
-                    $education['country'] = $resumeEducation->location->country ?? null;
-                    $education['full_address'] = $resumeEducation->location->rawInput ?? null;
+                $education['city'] = $resumeEducation->location->city ?? null;
+                $education['pincode'] = $resumeEducation->location->postalCode ?? null;
+                $education['state'] = $resumeEducation->location->state ?? null;
+                $education['country'] = $resumeEducation->location->country ?? null;
+                $education['full_address'] = $resumeEducation->location->rawInput ?? null;
                 // }
 
                 $educations[] = $education;
@@ -189,13 +191,13 @@ class ResumeParserAffinda
     {
         $i = 0;
         $resumeData = $this->parseData;
-        if(isset($resumeData->skills) && !empty($resumeData->skills)){
+        if(isset($resumeData->skills) && !empty($resumeData->skills)) {
             $skills = [];
-            foreach($resumeData->skills as $resumeSkill){
-                    $skills[$i]['skill_type'] = $resumeSkill->type ?? null;
-                    $skills[$i]['skill_name'] = $resumeSkill->name ?? null;
-                    $skills[$i]['skill_experiance'] = $resumeSkill->numberOfMonths ?? null;
-                    $i++;
+            foreach($resumeData->skills as $resumeSkill) {
+                $skills[$i]['skill_type'] = $resumeSkill->type ?? null;
+                $skills[$i]['skill_name'] = $resumeSkill->name ?? null;
+                $skills[$i]['skill_experiance'] = $resumeSkill->numberOfMonths ?? null;
+                $i++;
             }
         }
         return $skills ?? null;
@@ -204,7 +206,7 @@ class ResumeParserAffinda
     public function fetchLocatiobDetailsFromResumeData()
     {
         $resumeData = $this->parseData;
-        if(isset($resumeData->location) && !empty($resumeData->location)){
+        if(isset($resumeData->location) && !empty($resumeData->location)) {
             $locations = [];
             $locations['city'] = $resumeData->location->city ?? null;
             $locations['pincode'] = $resumeData->location->postalCode ?? null;
@@ -218,7 +220,7 @@ class ResumeParserAffinda
     public function fetchCertificateDetailsFromResumeData()
     {
         $resumeData = $this->parseData;
-        if(isset($resumeData->certifications) && !empty($resumeData->certifications)){
+        if(isset($resumeData->certifications) && !empty($resumeData->certifications)) {
             return $resumeData->certifications ?? null;
         }
     }
@@ -226,9 +228,9 @@ class ResumeParserAffinda
     public function fetchExperienceSkillDetails()
     {
         $resumeData = $this->parseData;
-        if(isset($resumeData->workExperience) && !empty($resumeData->workExperience)){
+        if(isset($resumeData->workExperience) && !empty($resumeData->workExperience)) {
             $i = 0;
-            foreach($resumeData->workExperience as $workExperience){
+            foreach($resumeData->workExperience as $workExperience) {
                 $skills[$i]['organization_name'] = $workExperience->organization;
                 $skills[$i]['skill_name'] = $workExperience->jobDescription;
                 $i++;
